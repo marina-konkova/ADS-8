@@ -26,7 +26,6 @@ void Train::addCage(bool light) {
 int Train::getLength() {
   if (first == nullptr)
     return 0;
-
   Cage *current = first;
   current->light = true;
   int length = 1;
