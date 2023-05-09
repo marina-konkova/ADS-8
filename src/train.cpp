@@ -2,50 +2,57 @@
 #include "train.h"
 
 Train::Train() {
-  first = nullptr;
   countOp = 0;
+  first = nullptr;
+  return;
 }
 
 void Train::addCage(bool light) {
   Cage *newCage = new Cage;
   newCage->light = light;
-  newCage->next = nullptr;
-  newCage->prev = nullptr;
   if (first == nullptr) {
     first = newCage;
-    first->next = newCage;
+    first->next = first;
     first->prev = first;
   } else {
-    newCage->next = first->next;
-    newCage->prev = first;
-    first->next->prev = newCage;
+    newCage->next = first;
+    newCage->prev = first->prev;
+    first->prev->next = newCage;
     first->prev = newCage;
   }
+  return;
 }
 
 int Train::getLength() {
-  if (first == nullptr)
-    return 0;
   Cage *current = first;
-  current->light = true;
+  current->light = 1;
   int length = 1;
-  while (true) {
-        current = current->next;
-        if (current->light == false) {
+  if (current == nullptr)
+    return 0;
+  current->light = 1;
+  countOp++;
+  current = current->next;
+  while (current) {
+        if (current->light == 0) {
+            current = current->next;
             length++;
             countOp++;
         }  else {
-            countOp++;
-            current->light = false;
+            current->light = 0;
             for (int i = length; i > 0; i--) {
                 current = current->prev;
                 countOp++;
             }
-            if (current->light == false)
-                return length;
-            length = 1;
+            if (current->light == false) {
+              return length;
+            } else {
+              length = 1;
+              countOp++;
+              current = current->next;
+            }
         }
     }
+    return 0;
 }
 
 int Train::getOpCount() {
